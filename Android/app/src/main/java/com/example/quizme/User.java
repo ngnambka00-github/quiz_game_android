@@ -1,4 +1,4 @@
-package com.example.quizme.models;
+package com.example.quizme;
 
 public class User {
     private String name, email, pass,profile, referCode;

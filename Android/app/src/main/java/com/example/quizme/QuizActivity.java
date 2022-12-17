@@ -5,11 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.quizme.databinding.ActivityQuizBinding;
-import com.example.quizme.models.Question;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,55 +37,50 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         questions = new ArrayList<>();
-        questions.add(new Question("Tôi là ai?", "nam", "trang", "quynh", "chung", "nam"));
-        questions.add(new Question("Tôi học trường nào?", "BKHN", "BKHCM", "BKĐN", "ĐHTH", "BKHN"));
-        questions.add(new Question("Tôi học chuyên ngành gì?", "ĐTVT", "Hóa", "CNTT", "KTMT", "ĐTVT"));
+        database = FirebaseFirestore.getInstance();
 
-        resetTimer();
-        setNextQuestion();
+        final String catId = getIntent().getStringExtra("catId");
 
-//        database = FirebaseFirestore.getInstance();
-
-        String catId = getIntent().getStringExtra("catId");
         Random random = new Random();
         final int rand = random.nextInt(12);
 
-//        database.collection("categories")
-//                .document(catId)
-//                .collection("questions")
-//                .whereGreaterThanOrEqualTo("index", rand)
-//                .orderBy("index")
-//                .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                if(queryDocumentSnapshots.getDocuments().size() < 5) {
-//                    database.collection("categories")
-//                            .document(catId)
-//                            .collection("questions")
-//                            .whereLessThanOrEqualTo("index", rand)
-//                            .orderBy("index")
-//                            .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-//                                    Question question = snapshot.toObject(Question.class);
-//                                    questions.add(question);
-//                                }
-//                            setNextQuestion();
-//                        }
-//                    });
-//                } else {
-//                    for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-//                        Question question = snapshot.toObject(Question.class);
-//                        questions.add(question);
-//                    }
-//                    setNextQuestion();
-//                }
-//            }
-//        });
+        database.collection("categories")
+                .document(catId)
+                .collection("questions")
+                .whereGreaterThanOrEqualTo("index", rand)
+                .orderBy("index")
+                .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(queryDocumentSnapshots.getDocuments().size() < 5) {
+                    database.collection("categories")
+                            .document(catId)
+                            .collection("questions")
+                            .whereLessThanOrEqualTo("index", rand)
+                            .orderBy("index")
+                            .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                    Question question = snapshot.toObject(Question.class);
+                                    questions.add(question);
+                                }
+                            setNextQuestion();
+                        }
+                    });
+                } else {
+                    for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                        Question question = snapshot.toObject(Question.class);
+                        questions.add(question);
+                    }
+                    setNextQuestion();
+                }
+            }
+        });
 
 
-//        resetTimer();
+
+        resetTimer();
 
     }
 

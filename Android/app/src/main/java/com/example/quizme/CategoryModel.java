@@ -1,4 +1,4 @@
-package com.example.quizme.models;
+package com.example.quizme;
 
 public class CategoryModel {
     private String categoryId, categoryName, categoryImage;

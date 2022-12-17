@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.quizme.databinding.RowLeaderboardsBinding;
-import com.example.quizme.models.User;
 
 import java.util.ArrayList;
 

@@ -31,11 +31,11 @@ public class ResultActivity extends AppCompatActivity {
         binding.score.setText(String.format("%d/%d", correctAnswers, totalQuestions));
         binding.earnedCoins.setText(String.valueOf(points));
 
-//        FirebaseFirestore database = FirebaseFirestore.getInstance();
-//
-//        database.collection("users")
-//                .document(FirebaseAuth.getInstance().getUid())
-//                .update("coins", FieldValue.increment(points));
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        database.collection("users")
+                .document(FirebaseAuth.getInstance().getUid())
+                .update("coins", FieldValue.increment(points));
 
         binding.restartBtn.setOnClickListener(new View.OnClickListener() {
             @Override

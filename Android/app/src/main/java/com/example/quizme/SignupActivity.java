@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.quizme.databinding.ActivitySignupBinding;
-import com.example.quizme.models.User;
-import com.example.quizme.utils.UserUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -38,6 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setMessage("We're creating new account...");
 
+
         binding.createNewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,70 +47,40 @@ public class SignupActivity extends AppCompatActivity {
                 name = binding.nameBox.getText().toString();
                 referCode = binding.referBox.getText().toString();
 
-                if (email.isEmpty()) {
-                    Toast.makeText(SignupActivity.this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
-                    binding.emailBox.requestFocus();
-                    return;
-                }
-                if (pass.isEmpty()) {
-                    Toast.makeText(SignupActivity.this, "Vui lòng nhập password", Toast.LENGTH_SHORT).show();
-                    binding.passwordBox.requestFocus();
-                    return;
-                }
-                if (name.isEmpty()) {
-                    Toast.makeText(SignupActivity.this, "Vui lòng nhập họ và tên", Toast.LENGTH_SHORT).show();
-                    binding.nameBox.requestFocus();
-                    return;
-                }
-
-                User user = new User(name, email, pass, referCode);
+                final User user = new User(name, email, pass, referCode);
 
                 dialog.show();
+                auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            String uid = task.getResult().getUser().getUid();
 
-                if (UserUtils.addUser(user)) {
-                    dialog.dismiss();
-                    startActivity(new Intent(SignupActivity.this, MainActivity.class));
-                    finish();
-                } else{
-                    dialog.dismiss();
-                    Toast.makeText(SignupActivity.this, "Tạo tài khoản không thành công", Toast.LENGTH_SHORT).show();
-                }
-//                auth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        if(task.isSuccessful()) {
-//                            String uid = task.getResult().getUser().getUid();
-//
-//                            database
-//                                    .collection("users")
-//                                    .document(uid)
-//                                    .set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    if(task.isSuccessful()) {
-//                                        dialog.dismiss();
-//                                        startActivity(new Intent(SignupActivity.this, MainActivity.class));
-//                                        finish();
-//                                    } else {
-//                                        Toast.makeText(SignupActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            });
-//                        } else {
-//                            dialog.dismiss();
-//                            Toast.makeText(SignupActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+                            database
+                                    .collection("users")
+                                    .document(uid)
+                                    .set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        dialog.dismiss();
+                                        startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(SignupActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            dialog.dismiss();
+                            Toast.makeText(SignupActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
         });
 
-        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
-            }
-        });
 
     }
 }

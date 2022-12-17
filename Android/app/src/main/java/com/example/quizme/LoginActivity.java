@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.quizme.databinding.ActivityLoginBinding;
-import com.example.quizme.utils.UserUtils;
-import com.example.quizme.utils.ViewUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -34,11 +32,10 @@ public class LoginActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setMessage("Logging in...");
 
-        // Check user đã tồn tại sẵn hay chưa. Nếu tồn tại rồi đi thẳng vào MainActivity
-//        if(auth.getCurrentUser() != null) {
-//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//            finish();
-//        }
+        if(auth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
 
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,40 +44,21 @@ public class LoginActivity extends AppCompatActivity {
                 email = binding.emailBox.getText().toString();
                 pass = binding.passwordBox.getText().toString();
 
-                if (email.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Vui lòng nhập email", Toast.LENGTH_SHORT).show();
-                    binding.emailBox.requestFocus();
-                    return;
-                }
-                if (pass.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Vui lòng nhập password", Toast.LENGTH_SHORT).show();
-                    binding.passwordBox.requestFocus();
-                    return;
-                }
 
                 dialog.show();
-                if(UserUtils.checkLogin(email, pass)) {
-                    dialog.dismiss();
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                } else {
-                    dialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Không tồn tại user này", Toast.LENGTH_SHORT).show();
-                    binding.emailBox.requestFocus();
-                }
 
-//                auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        dialog.dismiss();
-//                        if(task.isSuccessful()) {
-//                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                            finish();
-//                        } else {
-//                            Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+                auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        dialog.dismiss();
+                        if(task.isSuccessful()) {
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 

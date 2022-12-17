@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.quizme.databinding.FragmentWalletBinding;
-import com.example.quizme.datatest.UserData;
-import com.example.quizme.models.User;
-import com.example.quizme.models.WithdrawRequest;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -40,20 +38,18 @@ public class WalletFragment extends Fragment {
         binding = FragmentWalletBinding.inflate(inflater, container, false);
         database = FirebaseFirestore.getInstance();
 
-        binding.currentCoins.setText(String.valueOf(UserData.users.get(0).getCoins()));
-//        database.collection("users")
-//                .document(FirebaseAuth.getInstance().getUid())
-//                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//
-//                user = documentSnapshot.toObject(User.class);
-//                binding.currentCoins.setText(String.valueOf(user.getCoins()));
-//
-//                //binding.currentCoins.setText(user.getCoins() + "");
-//
-//            }
-//        });
+        database.collection("users")
+                .document(FirebaseAuth.getInstance().getUid())
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                user = documentSnapshot.toObject(User.class);
+                binding.currentCoins.setText(String.valueOf(user.getCoins()));
+
+                //binding.currentCoins.setText(user.getCoins() + "");
+
+            }
+        });
 
         binding.sendRequest.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -10,9 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.quizme.databinding.FragmentLeaderboardsBinding;
-import com.example.quizme.datatest.UserData;
-import com.example.quizme.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -52,22 +51,17 @@ public class LeaderboardsFragment extends Fragment {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        for(User user : UserData.users) {
-            users.add(user);
-        }
-        adapter.notifyDataSetChanged();
-
-//        database.collection("users")
-//                .orderBy("coins", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-//                    User user = snapshot.toObject(User.class);
-//                    users.add(user);
-//                }
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
+        database.collection("users")
+                .orderBy("coins", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
+                    User user = snapshot.toObject(User.class);
+                    users.add(user);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
 
 
         return binding.getRoot();
