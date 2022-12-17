@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.quizme.databinding.FragmentWalletBinding;
+import com.example.quizme.models.User;
+import com.example.quizme.models.WithdrawRequest;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;

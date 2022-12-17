@@ -1,4 +1,4 @@
-package com.example.quizme;
+package com.example.quizme.models;
 
 import com.google.firebase.firestore.ServerTimestamp;
 

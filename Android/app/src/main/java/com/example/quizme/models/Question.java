@@ -1,4 +1,4 @@
-package com.example.quizme;
+package com.example.quizme.models;
 
 public class Question {
     private String question, option1, option2, option3, option4, answer;
