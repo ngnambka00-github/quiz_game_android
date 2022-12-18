@@ -20,7 +20,7 @@ public interface UserService {
     Call<Void> addUser(@Body User user);
 
     @PUT("/user")
-    Call<User> updateUser(@Body User user);
+    Call<Void> updateUser(@Body User user);
 
     @DELETE("/user/{id}")
     Call<Void> deleteUser(@Path("id") int id);

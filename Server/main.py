@@ -103,7 +103,7 @@ def update_user():
             cursor.execute(constants.QUERY_UPDATE_USER, bind_data)
             conn.commit()
 
-            respone = jsonify('Employee updated successfully!')
+            respone = jsonify('User updated successfully!')
             respone.status_code = 200
             return respone
         else:

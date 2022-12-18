@@ -28,8 +28,10 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
 
     ActivityLoginBinding binding;
+    MyApplication myApplication = (MyApplication) this.getApplication();
     FirebaseAuth auth;
     ProgressDialog dialog;
+
 
     UserService userService;
 
@@ -96,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             }
         });
-
     }
 
     public void checkLogin(final String email, final String password) {
@@ -109,6 +110,9 @@ public class LoginActivity extends AppCompatActivity {
                     List<User> listUsers = response.body();
                     for (User user : listUsers){
                         if (user.getPass().equals(password) && user.getEmail().equals(email)) {
+                            // Update global variable
+                            myApplication.setUserLogin(user);
+
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                             return;

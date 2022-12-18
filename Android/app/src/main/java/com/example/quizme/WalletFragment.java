@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-
 public class WalletFragment extends Fragment {
+    private User loginedUser = null;
 
-    public WalletFragment() {
-        // Required empty public constructor
+    public WalletFragment() { }
+
+    public WalletFragment(User user) {
+        this.loginedUser = user;
     }
 
     @Override
@@ -32,26 +35,28 @@ public class WalletFragment extends Fragment {
     FragmentWalletBinding binding;
     FirebaseFirestore database;
     User user;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentWalletBinding.inflate(inflater, container, false);
         database = FirebaseFirestore.getInstance();
 
-        database.collection("users")
-                .document(FirebaseAuth.getInstance().getUid())
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                user = documentSnapshot.toObject(User.class);
-                binding.currentCoins.setText(String.valueOf(user.getCoins()));
 
-                //binding.currentCoins.setText(user.getCoins() + "");
+        if (loginedUser != null) {
+            binding.currentCoins.setText(String.valueOf(loginedUser.getCoins()));
+        }
 
-            }
-        });
+//        database.collection("users")
+//                .document(FirebaseAuth.getInstance().getUid())
+//                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//
+//                user = documentSnapshot.toObject(User.class);
+//                binding.currentCoins.setText(String.valueOf(user.getCoins()));
+//                binding.currentCoins.setText(user.getCoins() + "");
+//            }
+//        });
 
         binding.sendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,9 +79,6 @@ public class WalletFragment extends Fragment {
                 }
             }
         });
-
-
-
 
         return binding.getRoot();
     }

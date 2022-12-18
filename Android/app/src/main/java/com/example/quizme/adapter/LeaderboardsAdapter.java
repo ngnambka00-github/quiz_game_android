@@ -1,4 +1,4 @@
-package com.example.quizme;
+package com.example.quizme.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.quizme.R;
 import com.example.quizme.databinding.RowLeaderboardsBinding;
 import com.example.quizme.models.User;
 
@@ -35,13 +36,17 @@ public class LeaderboardsAdapter extends RecyclerView.Adapter<LeaderboardsAdapte
     public void onBindViewHolder(@NonNull LeaderboardViewHolder holder, int position) {
         User user = users.get(position);
 
+        holder.binding.index.setText(String.format("#%d", position+1));
         holder.binding.name.setText(user.getName());
         holder.binding.coins.setText(String.valueOf(user.getCoins()));
-        holder.binding.index.setText(String.format("#%d", position+1));
 
         Glide.with(context)
-                .load(user.getProfile())
+                .load("https://www.emmegi.co.uk/wp-content/uploads/2019/01/User-Icon.jpg")
                 .into(holder.binding.imageView7);
+
+//        Glide.with(context)
+//                .load(user.getProfile())
+//                .into(holder.binding.imageView7);
     }
 
     @Override

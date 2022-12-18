@@ -4,6 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class User {
+    @SerializedName("user_id")
+    @Expose
+    private int userId;
+
     @SerializedName("fullname")
     @Expose
     private String name;
@@ -83,7 +87,8 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", pass='" + pass + '\'' +
                 ", profile='" + profile + '\'' +
