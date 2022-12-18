@@ -1,7 +1,20 @@
 package com.example.quizme.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class CategoryModel {
-    private String categoryId, categoryName, categoryImage;
+    @SerializedName("category_id")
+    @Expose
+    private String categoryId;
+
+    @SerializedName("category_name")
+    @Expose
+    private String categoryName;
+
+    @SerializedName("category_image")
+    @Expose
+    private String categoryImage;
 
     public CategoryModel(String categoryId, String categoryName, String categoryImage) {
         this.categoryId = categoryId;

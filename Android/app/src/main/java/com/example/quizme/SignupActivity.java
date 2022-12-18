@@ -37,7 +37,6 @@ public class SignupActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setMessage("We're creating new account...");
 
-
         binding.createNewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +81,12 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+            }
+        });
 
     }
 }

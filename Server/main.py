@@ -6,6 +6,7 @@ from config import mysql
 from flask import jsonify
 from flask import flash, request
 import constants
+from flask_cors import cross_origin
 
 
 # --------------------- USER ------------------------
@@ -40,6 +41,7 @@ def create_user():
 
 
 @app.route('/user', methods=["GET"])
+@cross_origin()
 def get_users():
     """
         Lấy tất cả danh sách users
@@ -292,5 +294,11 @@ def showMessage(error=None):
     return respone
 
 
+@app.route("/")
+def show_home_page():
+    # response from the server
+    return "This is home page"
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0")

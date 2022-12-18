@@ -39,31 +39,31 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.content, new HomeFragment());
         transaction.commit();
 
-        binding.bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public boolean onItemSelect(int i) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                switch (i) {
-                    case 0:
-                        transaction.replace(R.id.content, new HomeFragment());
-                        transaction.commit();
-                        break;
-                    case 1:
-                        transaction.replace(R.id.content, new LeaderboardsFragment());
-                        transaction.commit();
-                        break;
-                    case 2:
-                        transaction.replace(R.id.content, new WalletFragment());
-                        transaction.commit();
-                        break;
-                    case 3:
-                        transaction.replace(R.id.content, new ProfileFragment());
-                        transaction.commit();
-                        break;
-                }
-                return false;
-            }
-        });
+//        binding.bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
+//            @Override
+//            public boolean onItemSelect(int i) {
+//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//                switch (i) {
+//                    case 0:
+//                        transaction.replace(R.id.content, new HomeFragment());
+//                        transaction.commit();
+//                        break;
+//                    case 1:
+//                        transaction.replace(R.id.content, new LeaderboardsFragment());
+//                        transaction.commit();
+//                        break;
+//                    case 2:
+//                        transaction.replace(R.id.content, new WalletFragment());
+//                        transaction.commit();
+//                        break;
+//                    case 3:
+//                        transaction.replace(R.id.content, new ProfileFragment());
+//                        transaction.commit();
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
 
     }
 

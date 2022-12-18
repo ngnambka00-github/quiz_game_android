@@ -1,7 +1,25 @@
 package com.example.quizme.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class User {
-    private String name, email, pass,profile, referCode;
+    @SerializedName("fullname")
+    @Expose
+    private String name;
+
+    @SerializedName("email")
+    @Expose
+    private String email;
+
+    @SerializedName("password")
+    @Expose
+    private String pass;
+
+    private String profile, referCode;
+
+    @SerializedName("coin")
+    @Expose
     private long coins = 25;
 
     public User() {
@@ -60,5 +78,17 @@ public class User {
 
     public void setProfile(String profile) {
         this.profile = profile;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", pass='" + pass + '\'' +
+                ", profile='" + profile + '\'' +
+                ", referCode='" + referCode + '\'' +
+                ", coins=" + coins +
+                '}';
     }
 }
