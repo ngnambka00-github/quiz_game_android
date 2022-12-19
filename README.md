@@ -45,7 +45,7 @@ python3 main.py
 API_URL = "http://192.168.1.14:5000/"
 ```
 
-# Code Contributors
+## Code Contributors
 
 [Nam Nguyen Van](https://github.com/ngnambka00-github) 20182698
 
