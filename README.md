@@ -44,3 +44,13 @@ python3 main.py
 ```commandline
 API_URL = "http://192.168.1.14:5000/"
 ```
+
+# Code Contributors
+
+[Nam Nguyen Van](https://github.com/ngnambka00-github) 20182698
+
+[Thi Nguyen Viet]() 20182798
+
+[Hoa Pham Thai]() 20182533
+
+[Chung Tran Van]() 20182388
