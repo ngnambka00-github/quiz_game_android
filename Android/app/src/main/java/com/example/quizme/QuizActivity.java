@@ -16,6 +16,7 @@ import com.example.quizme.models.Question;
 import com.example.quizme.utils.APIUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,7 +79,7 @@ public class QuizActivity extends AppCompatActivity {
         binding.help5050Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QuizActivity.this, "Trợ giúp 50:50", Toast.LENGTH_SHORT).show();
+                handler5050Help();
             }
         });
 
@@ -165,6 +166,12 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     void reset() {
+        binding.help5050Btn.setClickable(true);
+        binding.option1.setClickable(true);
+        binding.option2.setClickable(true);
+        binding.option3.setClickable(true);
+        binding.option4.setClickable(true);
+
         binding.option1.setBackground(getResources().getDrawable(R.drawable.option_unselected));
         binding.option2.setBackground(getResources().getDrawable(R.drawable.option_unselected));
         binding.option3.setBackground(getResources().getDrawable(R.drawable.option_unselected));
@@ -203,6 +210,54 @@ public class QuizActivity extends AppCompatActivity {
                 }
                 break;
         }
+    }
+
+    public void handler5050Help() {
+        List<String> incorrectAnswers = new ArrayList<>();
+        String correctAnswer = question.getAnswer();
+
+        if (!question.getOption1().equals(correctAnswer)) { incorrectAnswers.add(question.getOption1()); }
+        if (!question.getOption2().equals(correctAnswer)) { incorrectAnswers.add(question.getOption2()); }
+        if (!question.getOption3().equals(correctAnswer)) { incorrectAnswers.add(question.getOption3()); }
+        if (!question.getOption4().equals(correctAnswer)) { incorrectAnswers.add(question.getOption4()); }
+
+        Random rand = new Random();
+        List<String> newList = new ArrayList<>();
+        for (int i = 0; i < 2; i++) {
+            int randomIndex = rand.nextInt(incorrectAnswers.size());
+            String item = incorrectAnswers.get(randomIndex);
+
+            boolean check1 = false;
+            for (String text : newList) {
+                if (text.equals(item)) {
+                    check1 = true;
+                    break;
+                }
+            }
+            if (!check1) { newList.add(incorrectAnswers.get(randomIndex)); }
+            else{ i -= 1; }
+        }
+
+        for (String text : newList) {
+            if (text.equals(binding.option1.getText().toString())) {
+                binding.option1.setClickable(false);
+                binding.option1.setBackground(getResources().getDrawable(R.drawable.option_wrong));
+            }
+            if (text.equals(binding.option2.getText().toString())) {
+                binding.option2.setClickable(false);
+                binding.option2.setBackground(getResources().getDrawable(R.drawable.option_wrong));
+            }
+            if (text.equals(binding.option3.getText().toString())) {
+                binding.option3.setClickable(false);
+                binding.option3.setBackground(getResources().getDrawable(R.drawable.option_wrong));
+            }
+            if (text.equals(binding.option4.getText().toString())) {
+                binding.option4.setClickable(false);
+                binding.option4.setBackground(getResources().getDrawable(R.drawable.option_wrong));
+            }
+        }
+        binding.help5050Btn.setClickable(false);
+        Toast.makeText(QuizActivity.this, "Trợ giúp 50:50", Toast.LENGTH_SHORT).show();
     }
 
 }
