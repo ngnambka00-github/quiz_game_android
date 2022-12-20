@@ -88,7 +88,8 @@ public class HomeFragment extends Fragment {
         binding.spinwheel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), SpinnerActivity.class));
+//                startActivity(new Intent(getContext(), SpinnerActivity.class));
+                Toast.makeText(getActivity(), "Spin Wheel! Chưa dev chức năng này", Toast.LENGTH_SHORT).show();
             }
         });
 

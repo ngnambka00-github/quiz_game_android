@@ -1,6 +1,7 @@
 # Quiz Game App
-* Backend is runned by Flask API (Python)
-* Frontend is designed Android App (Android Studio)
+:arrow_right: Backend is runned by Flask API (Python) 
+
+:arrow_right: Frontend is designed Android App (Android Studio)
 
 ## 1. Install enviroment Python
 * Create env python by Conda
