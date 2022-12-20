@@ -17,7 +17,6 @@ import com.example.quizme.utils.APIUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,6 +30,7 @@ public class QuizActivity extends AppCompatActivity {
     private CountDownTimer timer;
 
     private boolean selectedAnswer = false;
+    private boolean isClick5050Help = false;
     private int index = 0;
     private int correctAnswers = 0;
 
@@ -79,6 +79,7 @@ public class QuizActivity extends AppCompatActivity {
         binding.help5050Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isClick5050Help = true;
                 handler5050Help();
             }
         });
@@ -102,7 +103,14 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
+                selectedAnswer = true;
+                isClick5050Help = false;
+                showAnswer();
+                binding.option1.setClickable(false);
+                binding.option2.setClickable(false);
+                binding.option3.setClickable(false);
+                binding.option4.setClickable(false);
+                binding.help5050Btn.setClickable(false);
             }
         };
     }
@@ -187,21 +195,32 @@ public class QuizActivity extends AppCompatActivity {
                 if(timer!=null)
                     timer.cancel();
                 selectedAnswer = true;
+                isClick5050Help = false;
+                binding.help5050Btn.setClickable(false);
+                binding.option1.setClickable(false);
+                binding.option2.setClickable(false);
+                binding.option3.setClickable(false);
+                binding.option4.setClickable(false);
+
                 TextView selected = (TextView) view;
                 checkAnswer(selected);
-
                 break;
+
             case R.id.nextBtn:
+                if (isClick5050Help || !selectedAnswer){
+                    Toast.makeText(QuizActivity.this, "Hãy chọn câu trả lời đi !", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+
                 reset();
                 // Check selected answers
-                if (!selectedAnswer) {
-                    Toast.makeText(QuizActivity.this, "Hãy chọn câu trả lời đi !", Toast.LENGTH_SHORT).show();
-                }
-                else if(index <= questions.size()) {
+                if(index < questions.size()) {
                     index++;
                     setNextQuestion();
                     selectedAnswer = false;
-                } else {
+                }
+
+                if (index == questions.size()) {
                     Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
                     intent.putExtra("correct", correctAnswers);
                     intent.putExtra("total", questions.size());

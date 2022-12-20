@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.example.quizme.databinding.ActivityResultBinding;
@@ -34,7 +35,6 @@ public class ResultActivity extends AppCompatActivity {
 
         // Update coin cho user
         // Xử lý gọi API tại đây
-
 //        FirebaseFirestore database = FirebaseFirestore.getInstance();
 //        database.collection("users")
 //                .document(FirebaseAuth.getInstance().getUid())
@@ -48,6 +48,17 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
+        binding.shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(ResultActivity.this, "Chưa code tính năng này !!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ResultActivity.this, MainActivity.class));
+        finishAffinity();
     }
 }
