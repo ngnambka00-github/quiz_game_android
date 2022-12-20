@@ -212,8 +212,12 @@ def create_question():
         option4 = obj_json["option4"]
         answer = obj_json["answer"]
         category_id = obj_json["category_id"]
+        explanation = ""
+        image_url = ""
 
-        if question and option1 and option2 and option3 and option4 and category_id and request.method == 'POST':
+
+        if question and option1 and option2 and option3 and option4 and answer \
+                and category_id and request.method == 'POST':
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             cursor.execute(constants.QUERY_INSERT_QUESTION,

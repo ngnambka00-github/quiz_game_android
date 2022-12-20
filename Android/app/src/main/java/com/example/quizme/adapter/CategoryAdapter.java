@@ -15,8 +15,11 @@ import com.bumptech.glide.Glide;
 import com.example.quizme.QuizActivity;
 import com.example.quizme.R;
 import com.example.quizme.models.CategoryModel;
+import com.example.quizme.models.Question;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
@@ -49,7 +52,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, QuizActivity.class);
-                intent.putExtra("catId", model.getCategoryId());
+                intent.putExtra("category_id", model.getCategoryId());
                 context.startActivity(intent);
             }
         });

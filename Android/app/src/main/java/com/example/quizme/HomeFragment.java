@@ -54,11 +54,13 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<List<CategoryModel>>() {
             @Override
             public void onResponse(Call<List<CategoryModel>> call, Response<List<CategoryModel>> response) {
-                List<CategoryModel> listCategories = response.body();
-                for (CategoryModel category : listCategories) {
-                    categories.add(category);
+                if(response.isSuccessful()) {
+                    List<CategoryModel> listCategories = response.body();
+                    for (CategoryModel category : listCategories) {
+                        categories.add(category);
+                    }
+                    adapter.notifyDataSetChanged();
                 }
-                adapter.notifyDataSetChanged();
             }
 
             @Override

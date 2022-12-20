@@ -5,22 +5,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.quizme.Service.QuestionService;
 import com.example.quizme.databinding.ActivityQuizBinding;
 import com.example.quizme.models.Question;
+import com.example.quizme.utils.APIUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class QuizActivity extends AppCompatActivity {
 
     ActivityQuizBinding binding;
+
+    QuestionService questionService;
 
     ArrayList<Question> questions;
     int index = 0;
@@ -34,53 +44,70 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityQuizBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        database = FirebaseFirestore.getInstance();
+        questionService = APIUtils.getQuestionService();
 
         questions = new ArrayList<>();
-        database = FirebaseFirestore.getInstance();
+        final int categoryID = Integer.parseInt(getIntent().getStringExtra("category_id"));
 
-        final String catId = getIntent().getStringExtra("catId");
-
-        Random random = new Random();
-        final int rand = random.nextInt(12);
-
-        database.collection("categories")
-                .document(catId)
-                .collection("questions")
-                .whereGreaterThanOrEqualTo("index", rand)
-                .orderBy("index")
-                .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        Call<List<Question>> call = questionService.getQuestionsByCategoryAndLimited(categoryID, 5);
+        call.enqueue(new Callback<List<Question>>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if(queryDocumentSnapshots.getDocuments().size() < 5) {
-                    database.collection("categories")
-                            .document(catId)
-                            .collection("questions")
-                            .whereLessThanOrEqualTo("index", rand)
-                            .orderBy("index")
-                            .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                    Question question = snapshot.toObject(Question.class);
-                                    questions.add(question);
-                                }
-                            setNextQuestion();
-                        }
-                    });
-                } else {
-                    for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-                        Question question = snapshot.toObject(Question.class);
-                        questions.add(question);
+            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                if(response.isSuccessful()) {
+                    List<Question> listQuestion = response.body();
+                    for (Question q : listQuestion) {
+                        questions.add(q);
                     }
                     setNextQuestion();
                 }
             }
+
+            @Override
+            public void onFailure(Call<List<Question>> call, Throwable t) {
+                Log.e("ERROR CALL: ", t.getMessage());
+            }
         });
+
+//        Random random = new Random();
+//        final int rand = random.nextInt(12);
+//        database.collection("categories")
+//                .document(catId)
+//                .collection("questions")
+//                .whereGreaterThanOrEqualTo("index", rand)
+//                .orderBy("index")
+//                .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//            @Override
+//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                if(queryDocumentSnapshots.getDocuments().size() < 5) {
+//                    database.collection("categories")
+//                            .document(catId)
+//                            .collection("questions")
+//                            .whereLessThanOrEqualTo("index", rand)
+//                            .orderBy("index")
+//                            .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
+//                                    Question question = snapshot.toObject(Question.class);
+//                                    questions.add(question);
+//                                }
+//                            setNextQuestion();
+//                        }
+//                    });
+//                } else {
+//                    for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
+//                        Question question = snapshot.toObject(Question.class);
+//                        questions.add(question);
+//                    }
+//                    setNextQuestion();
+//                }
+//            }
+//        });
 
 
 
         resetTimer();
-
     }
 
     void resetTimer() {

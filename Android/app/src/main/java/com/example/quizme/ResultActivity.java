@@ -26,16 +26,19 @@ public class ResultActivity extends AppCompatActivity {
         int correctAnswers = getIntent().getIntExtra("correct", 0);
         int totalQuestions = getIntent().getIntExtra("total", 0);
 
+        // Mỗi câu trả lời đúng sẽ nhận được POINT coin
         long points = correctAnswers * POINTS;
 
         binding.score.setText(String.format("%d/%d", correctAnswers, totalQuestions));
         binding.earnedCoins.setText(String.valueOf(points));
 
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        // Update coin cho user
+        // Xử lý gọi API tại đây
 
-        database.collection("users")
-                .document(FirebaseAuth.getInstance().getUid())
-                .update("coins", FieldValue.increment(points));
+//        FirebaseFirestore database = FirebaseFirestore.getInstance();
+//        database.collection("users")
+//                .document(FirebaseAuth.getInstance().getUid())
+//                .update("coins", FieldValue.increment(points));
 
         binding.restartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
