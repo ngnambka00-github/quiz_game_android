@@ -1,7 +1,7 @@
 # Quiz Game App
-:arrow_right: Backend is runned by Flask API (Python) 
+🤘 Backend is runned by Flask API (Python) 🤘
 
-:arrow_right: Frontend is designed Android App (Android Studio)
+🤘 Frontend is designed Android App (Android Studio) 🤘
 
 ## 1. Install enviroment Python
 * Create env python by Conda
@@ -56,4 +56,10 @@ API_URL = "http://192.168.1.14:5000/"
 
 :four: [Chung Tran Van]() 20182388
 
-:heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: :heart: 
+
+```
+_/﹋\_
+(҂`_´)
+<,︻╦╤─ ҉ – – 🍎
+_/﹋\_
+```
