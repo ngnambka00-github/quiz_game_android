@@ -9,7 +9,7 @@ public class APIUtils {
     private APIUtils(){
     };
 
-    public static final String API_URL = "http://192.168.98.52:5000/";
+    public static final String API_URL = "http://192.168.43.101:5000";
 
     // get User Service to use GET, POST, ... API
     public static UserService getUserService(){

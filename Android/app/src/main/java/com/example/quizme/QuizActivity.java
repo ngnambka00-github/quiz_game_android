@@ -1,6 +1,8 @@
 package com.example.quizme;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +10,9 @@ import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.quizme.Service.QuestionService;
 import com.example.quizme.databinding.ActivityQuizBinding;
 import com.example.quizme.models.Question;
@@ -29,8 +33,9 @@ import retrofit2.Response;
 public class QuizActivity extends AppCompatActivity {
 
     ActivityQuizBinding binding;
-
     QuestionService questionService;
+
+    boolean selectedAnswer = false;
 
     ArrayList<Question> questions;
     int index = 0;
@@ -148,6 +153,26 @@ public class QuizActivity extends AppCompatActivity {
             binding.option2.setText(question.getOption2());
             binding.option3.setText(question.getOption3());
             binding.option4.setText(question.getOption4());
+
+            // Cập nhập image của câu hỏi (nếu có)
+            if (question.getImageURL() == null || question.getImageURL().isEmpty()) {
+                // Invisible image component
+                binding.imageView13.setEnabled(false);
+                binding.imageView13.setVisibility(View.INVISIBLE);
+                binding.imageView13.getLayoutParams().height = 20;
+                binding.imageView13.requestLayout();
+            }
+            else {
+                // Visible image component
+                binding.imageView13.setEnabled(true);
+                binding.imageView13.setVisibility(View.VISIBLE);
+                binding.imageView13.getLayoutParams().height = 750;
+                binding.imageView13.requestLayout();
+
+                Glide.with(this.getApplicationContext())
+                        .load(question.getImageURL())
+                        .into(binding.imageView13);
+            }
         }
     }
 
@@ -177,15 +202,21 @@ public class QuizActivity extends AppCompatActivity {
             case R.id.option_4:
                 if(timer!=null)
                     timer.cancel();
+                selectedAnswer = true;
                 TextView selected = (TextView) view;
                 checkAnswer(selected);
 
                 break;
             case R.id.nextBtn:
                 reset();
-                if(index <= questions.size()) {
+                // Check selected answers
+                if (!selectedAnswer) {
+                    Toast.makeText(QuizActivity.this, "Hãy chọn câu trả lời đi !", Toast.LENGTH_SHORT).show();
+                }
+                else if(index <= questions.size()) {
                     index++;
                     setNextQuestion();
+                    selectedAnswer = false;
                 } else {
                     Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
                     intent.putExtra("correct", correctAnswers);
