@@ -28,7 +28,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     public HomeFragment() {
     }
@@ -42,7 +42,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         categoryService = APIUtils.getCategoryService();
 
@@ -69,20 +68,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        database.collection("categories")
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                        categories.clear();
-//                        for (DocumentSnapshot snapshot : value.getDocuments()) {
-//                            CategoryModel model = snapshot.toObject(CategoryModel.class);
-//                            model.setCategoryId(snapshot.getId());
-//                            categories.add(model);
-//                        }
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                });
-
         binding.categoryList.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.categoryList.setAdapter(adapter);
 
@@ -90,7 +75,7 @@ public class HomeFragment extends Fragment {
         binding.spinwheel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(getContext(), SpinnerActivity.class));
+                // startActivity(new Intent(getContext(), SpinnerActivity.class));
                 Toast.makeText(getActivity(), "Spin Wheel! Chưa dev chức năng này", Toast.LENGTH_SHORT).show();
             }
         });

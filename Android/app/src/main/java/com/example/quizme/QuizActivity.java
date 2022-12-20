@@ -1,30 +1,21 @@
 package com.example.quizme;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.example.quizme.Service.QuestionService;
 import com.example.quizme.databinding.ActivityQuizBinding;
 import com.example.quizme.models.Question;
 import com.example.quizme.utils.APIUtils;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,24 +23,21 @@ import retrofit2.Response;
 
 public class QuizActivity extends AppCompatActivity {
 
-    ActivityQuizBinding binding;
-    QuestionService questionService;
+    private ActivityQuizBinding binding;
+    private QuestionService questionService;
+    private ArrayList<Question> questions;
+    private Question question;
+    private CountDownTimer timer;
 
-    boolean selectedAnswer = false;
-
-    ArrayList<Question> questions;
-    int index = 0;
-    Question question;
-    CountDownTimer timer;
-    FirebaseFirestore database;
-    int correctAnswers = 0;
+    private boolean selectedAnswer = false;
+    private int index = 0;
+    private int correctAnswers = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityQuizBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        database = FirebaseFirestore.getInstance();
         questionService = APIUtils.getQuestionService();
 
         questions = new ArrayList<>();
@@ -73,46 +61,35 @@ public class QuizActivity extends AppCompatActivity {
                 Log.e("ERROR CALL: ", t.getMessage());
             }
         });
-
-//        Random random = new Random();
-//        final int rand = random.nextInt(12);
-//        database.collection("categories")
-//                .document(catId)
-//                .collection("questions")
-//                .whereGreaterThanOrEqualTo("index", rand)
-//                .orderBy("index")
-//                .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                if(queryDocumentSnapshots.getDocuments().size() < 5) {
-//                    database.collection("categories")
-//                            .document(catId)
-//                            .collection("questions")
-//                            .whereLessThanOrEqualTo("index", rand)
-//                            .orderBy("index")
-//                            .limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-//                                    Question question = snapshot.toObject(Question.class);
-//                                    questions.add(question);
-//                                }
-//                            setNextQuestion();
-//                        }
-//                    });
-//                } else {
-//                    for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-//                        Question question = snapshot.toObject(Question.class);
-//                        questions.add(question);
-//                    }
-//                    setNextQuestion();
-//                }
-//            }
-//        });
-
-
-
         resetTimer();
+
+        // Event sroll cho text (phần câu hỏi)
+        binding.question.setMovementMethod(new ScrollingMovementMethod());
+
+        // Event gọi sự trợ giúp
+        binding.callRelativeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(QuizActivity.this, "Chưa triển khai tính năng này !!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Event 50:50
+        binding.help5050Btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(QuizActivity.this, "Trợ giúp 50:50", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Event quiz click
+        binding.quizBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(QuizActivity.this, MainActivity.class));
+                finish();
+            }
+        });
     }
 
     void resetTimer() {

@@ -24,13 +24,12 @@ import retrofit2.Call;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
     Context context;
-    ArrayList<CategoryModel> categoryModels;
+    private ArrayList<CategoryModel> categoryModels;
 
     public CategoryAdapter(Context context, ArrayList<CategoryModel> categoryModels) {
         this.context = context;
         this.categoryModels = categoryModels;
     }
-
 
     @NonNull
     @Override

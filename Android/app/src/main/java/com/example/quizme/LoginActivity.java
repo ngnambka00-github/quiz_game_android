@@ -4,8 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -14,10 +18,6 @@ import com.example.quizme.Service.UserService;
 import com.example.quizme.databinding.ActivityLoginBinding;
 import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -27,21 +27,16 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ActivityLoginBinding binding;
-    MyApplication myApplication = (MyApplication) this.getApplication();
-    FirebaseAuth auth;
-    ProgressDialog dialog;
-
-
-    UserService userService;
+    private ActivityLoginBinding binding;
+    private MyApplication myApplication = (MyApplication) this.getApplication();
+    private ProgressDialog dialog;
+    private UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        auth = FirebaseAuth.getInstance();
         userService = APIUtils.getUserService();
 
         dialog = new ProgressDialog(this);
@@ -76,19 +71,6 @@ public class LoginActivity extends AppCompatActivity {
                 // Nếu login thành công sẽ chuyển sang MainActivity
                 // Nếu login không thành công sẽ show Toast
                 checkLogin(email, pass);
-
-//                auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        dialog.dismiss();
-//                        if(task.isSuccessful()) {
-//                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//                            finish();
-//                        } else {
-//                            Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
             }
         });
 
