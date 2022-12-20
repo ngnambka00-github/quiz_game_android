@@ -42,7 +42,7 @@ python3 main.py
 
 ### 2.3 Run Android App
 * Copy url in 2.2 to [file](Android/app/src/main/java/com/example/quizme/utils/APIUtils.java) 
-```commandline
+```js 
 API_URL = "http://192.168.1.14:5000/"
 ```
 
