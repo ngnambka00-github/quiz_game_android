@@ -80,6 +80,15 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.wallet) {
             Toast.makeText(this, "wallet is clicked.", Toast.LENGTH_SHORT).show();
+
+            // Change fragment
+            User loginUser = myApplication.getUserLogin();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content, new WalletFragment(loginUser));
+            transaction.commit();
+
+            // change index of bottomBar
+            binding.bottomBar.setItemActiveIndex(2);
         }
         return super.onOptionsItemSelected(item);
     }

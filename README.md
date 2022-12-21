@@ -57,6 +57,9 @@ API_URL = "http://192.168.1.14:5000/"
 :four: [Chung Tran Van]() 20182388
 
 
+# References
+1. [Retrofit](https://www.jackrutorial.com/2018/06/retrofit-2-crud-android-example.html?m=1&fbclid=IwAR3A-EN8ipFW_OhznLEi2bJb_vM7Vql3cTr-EKrOc1dyw6QPrBXmvu7oIFs). A library for creating request between client and server.
+
 ```
 _/﹋\_
 (҂`_´)

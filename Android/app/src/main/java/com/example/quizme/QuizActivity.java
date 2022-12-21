@@ -71,7 +71,12 @@ public class QuizActivity extends AppCompatActivity {
         binding.callRelativeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(QuizActivity.this, "Chưa triển khai tính năng này !!", Toast.LENGTH_SHORT).show();
+                String explanation = question.getExplanation();
+                if (explanation == null || explanation.isEmpty()) {
+                    Toast.makeText(QuizActivity.this, "Xin lỗi câu này không có gợi ý !!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(QuizActivity.this, "Gợi ý: " + explanation, Toast.LENGTH_LONG).show();
+                }
             }
         });
 
