@@ -4,10 +4,11 @@ import pymysql
 from app import app
 from config import mysql
 from flask import jsonify
-from flask import flash, request
+from flask import flash, request, redirect
 import constants
 from flask_cors import cross_origin
-
+import os
+from werkzeug.utils import secure_filename
 
 # --------------------- USER ------------------------
 @app.route('/user', methods=["POST"])
@@ -303,6 +304,31 @@ def show_home_page():
     # response from the server
     return "This is home page"
 
+# thinv
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/', methods=['POST'])
+def upload_image():
+	if 'file' not in request.files:
+		return 'No file part'
+		# return redirect(request.url)
+	file = request.files['file']
+	if file.filename == '':
+		return 'No image selected for uploading'
+		# return redirect(request.url)
+	if file and allowed_file(file.filename):
+		filename = secure_filename(file.filename)
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		# print('upload_image filename: ' + filename)
+		# flash('Image successfully uploaded and displayed below')
+		# return render_template('upload.html', filename=filename)
+		return "Image(s) Uploaded Successfully"
+	else:
+		return('Allowed image types are -> png, jpg, jpeg, gif')
+		# return redirect(request.url)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
