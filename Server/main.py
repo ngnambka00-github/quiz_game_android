@@ -312,23 +312,18 @@ def allowed_file(filename):
 
 @app.route('/', methods=['POST'])
 def upload_image():
-	if 'file' not in request.files:
-		return 'No file part'
-		# return redirect(request.url)
-	file = request.files['file']
-	if file.filename == '':
-		return 'No image selected for uploading'
-		# return redirect(request.url)
-	if file and allowed_file(file.filename):
-		filename = secure_filename(file.filename)
-		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-		# print('upload_image filename: ' + filename)
-		# flash('Image successfully uploaded and displayed below')
-		# return render_template('upload.html', filename=filename)
-		return "Image(s) Uploaded Successfully"
-	else:
-		return('Allowed image types are -> png, jpg, jpeg, gif')
-		# return redirect(request.url)
+    files_ids = list(request.files)
+    print("\nNumber of Received Images : ", len(files_ids))
+    image_num = 1
+    for file_id in files_ids:
+        print("\nSaving Image ", str(image_num), "/", len(files_ids))
+        imagefile = request.files[file_id]
+        filename = secure_filename(imagefile.filename)
+        print("Image Filename : " + imagefile.filename)
+        imagefile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        image_num = image_num + 1
+    print("\n")
+    return "Image(s) Uploaded Successfully. Come Back Soon."
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
