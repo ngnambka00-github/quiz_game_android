@@ -86,6 +86,7 @@ public class ProfileFragment extends Fragment {
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContext().getContentResolver().query(pickedImage, filePath, null, null, null);
             cursor.moveToFirst();
+
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -97,6 +98,7 @@ public class ProfileFragment extends Fragment {
             multipartBodyBuilder.addFormDataPart("image" + 1, loginUser.getEmail().toString() +  ".jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
             RequestBody postBodyImage = multipartBodyBuilder.build();
             postRequest(APIUtils.API_URL, postBodyImage);
+            
             cursor.close();
         }
     }
