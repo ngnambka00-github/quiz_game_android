@@ -26,6 +26,10 @@ public class User {
     @Expose
     private long coins = 25;
 
+    @SerializedName("image_path")
+    @Expose
+    private String imagePath;
+
     public User() {
     }
 
@@ -84,6 +88,22 @@ public class User {
         this.profile = profile;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -94,6 +114,7 @@ public class User {
                 ", profile='" + profile + '\'' +
                 ", referCode='" + referCode + '\'' +
                 ", coins=" + coins +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 }

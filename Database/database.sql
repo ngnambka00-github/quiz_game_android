@@ -57,7 +57,7 @@ CREATE TABLE `question` (
   `option4` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `answer` varchar(200) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `category_id` int DEFAULT NULL,
-  `explaination` varchar(400) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `explanation` varchar(400) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   `image_url` varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
   PRIMARY KEY (`question_id`),
   UNIQUE KEY `question_id_UNIQUE` (`question_id`),
@@ -89,8 +89,9 @@ CREATE TABLE `user` (
   `password` varchar(45) COLLATE utf8mb3_bin NOT NULL,
   `coin` varchar(45) COLLATE utf8mb3_bin DEFAULT NULL,
   `fullname` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `image_path` varchar(100) COLLATE utf8mb3_bin DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +100,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'nam@gmail.com','123','250','Nguyen Van Nam'),(2,'quynh123@gmail.com','123','300','Phạm Thị Quỳnh'),(3,'quynh@gmail.com','123','250','Pham Thi Quynh');
+INSERT INTO `user` VALUES (1,'nam@gmail.com','123','250','Nguyen Van Nam','avatar/nam_3.png'),(2,'thi@gmail.com','123','300','Nguyễn Việt Thi','avatar/thi.jpg'),(3,'hoa@gmail.com','123','250','Phạm Thái Hòa','avatar/hoa.jpg'),(4,'chung@gmail.com','123','400','Trần Văn Chung','avatar/chung.jpg'),(5,'quynh@gmail.com','123','250','Pham Thi Quynh',NULL),(6,'trang@gmail.com','123','250','Ngo Thi Trang',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -112,4 +113,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-20 11:48:09
+-- Dump completed on 2022-12-27  0:52:19

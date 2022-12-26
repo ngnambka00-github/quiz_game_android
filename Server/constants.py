@@ -1,7 +1,7 @@
 QUERY_INSERT_USER = "INSERT INTO user(fullname, email, password, coin) VALUES(%s, %s, %s, '250')"
 QUERY_GET_USERS = "SELECT * FROM user"
 QUERY_GET_USER_BY_ID = "SELECT * FROM user WHERE user_id=%s"
-QUERY_UPDATE_USER = "UPDATE user SET email=%s, password=%s, coin=%s, fullname=%s WHERE user_id=%s"
+QUERY_UPDATE_USER = "UPDATE user SET email=%s, password=%s, coin=%s, fullname=%s, image_path=%s WHERE user_id=%s"
 QUERY_DELETE_USER = "DELETE FROM user WHERE user_id =%s"
 
 QUERY_INSERT_CATEGORY = "INSERT INTO category(category_name, category_image) VALUES(%s, %s)"

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.example.quizme.R;
 import com.example.quizme.databinding.RowLeaderboardsBinding;
 import com.example.quizme.models.User;
+import com.example.quizme.utils.APIUtils;
 
 import java.util.ArrayList;
 
@@ -40,9 +41,18 @@ public class LeaderboardsAdapter extends RecyclerView.Adapter<LeaderboardsAdapte
         holder.binding.name.setText(user.getName());
         holder.binding.coins.setText(String.valueOf(user.getCoins()));
 
-        Glide.with(context)
-                .load("https://www.emmegi.co.uk/wp-content/uploads/2019/01/User-Icon.jpg")
-                .into(holder.binding.imageView7);
+        String defaultImagePath = "https://www.emmegi.co.uk/wp-content/uploads/2019/01/User-Icon.jpg";
+        String avatarUser = user.getImagePath();
+        if (avatarUser != null && !avatarUser.isEmpty()) {
+            Glide.with(context)
+                    .load(APIUtils.API_URL + "/static/" + avatarUser)
+                    .into(holder.binding.imageView7);
+        }
+        else {
+            Glide.with(context)
+                    .load("https://www.emmegi.co.uk/wp-content/uploads/2019/01/User-Icon.jpg")
+                    .into(holder.binding.imageView7);
+        }
 
 //        Glide.with(context)
 //                .load(user.getProfile())

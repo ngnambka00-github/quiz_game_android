@@ -98,9 +98,10 @@ def update_user():
         password = obj_json['password']
         coin = obj_json['coin']
         fullname = obj_json['fullname']
+        image_path = obj_json["image_path"]
 
         if fullname and email and password and coin and user_id and request.method == 'PUT':
-            bind_data = (email, password, coin, fullname, user_id)
+            bind_data = (email, password, coin, fullname, image_path, user_id)
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.execute(constants.QUERY_UPDATE_USER, bind_data)
