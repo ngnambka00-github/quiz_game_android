@@ -1,12 +1,15 @@
-from unicodedata import category
-
 import pymysql
 from app import app
 from config import mysql
 from flask import jsonify
-from flask import flash, request
+from flask import flash, request, flash, url_for, redirect
 import constants
 from flask_cors import cross_origin
+from flask_cors import cross_origin
+from flask_uploads import IMAGES, UploadSet, configure_uploads
+
+photos = UploadSet("photos", IMAGES)
+configure_uploads(app, photos)
 
 
 # --------------------- USER ------------------------
@@ -215,7 +218,6 @@ def create_question():
         explanation = ""
         image_url = ""
 
-
         if question and option1 and option2 and option3 and option4 and answer \
                 and category_id and request.method == 'POST':
             conn = mysql.connect()
@@ -304,5 +306,30 @@ def show_home_page():
     return "This is home page"
 
 
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.post("/upload_image")
+def upload_image():
+    if "image" in request.files:
+        filename = request.files["image"].filename
+        if allowed_file(filename):
+            after_name = photos.save(request.files["image"])
+            flash("Image saved successfully.")
+            return after_name
+        else:
+            flash("Image saved unsuccessfully.")
+            return "upload unsuccessfully"
+    else:
+        return "Not key \'image\'"
+
+
+@app.route('/display/<filename>')
+def display_image(filename):
+    return redirect(url_for('static', filename='avatar/' + filename), code=301)
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", debug=True)
