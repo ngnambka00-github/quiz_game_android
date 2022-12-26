@@ -80,6 +80,8 @@ public class User {
         return profile;
     }
 
+    public int getUserId(){return userId;}
+
     public void setProfile(String profile) {
         this.profile = profile;
     }

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.quizme.Service.UserService;
 import com.example.quizme.databinding.FragmentProfileBinding;
 import com.example.quizme.models.User;
@@ -29,6 +30,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -51,11 +54,12 @@ public class ProfileFragment extends Fragment {
         this.loginUser = user;
     }
     public static final int PICK_IMAGE = 1;
-    private Uri imageUri;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userService = APIUtils.getUserService();
+
     }
 
     void postRequest(String postUrl, RequestBody postBody) {
@@ -74,7 +78,10 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-
+                if(response.isSuccessful()) {
+//                    String path = APIUtils.API_URL + "/static/avatar_image/" + loginUser.getUserId() + ".png";
+//                    Glide.with(getContext()).load(path).into(binding.profileImage);
+                }
             }
         });
     }
@@ -95,9 +102,11 @@ public class ProfileFragment extends Fragment {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
-                    multipartBodyBuilder.addFormDataPart("image" + 1, loginUser.getReferCode() +  ".jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
+                    multipartBodyBuilder.addFormDataPart("image" + 1, loginUser.getUserId() +  ".png", RequestBody.create(MediaType.parse("image/*png"), byteArray));
                     RequestBody postBodyImage = multipartBodyBuilder.build();
                     postRequest(APIUtils.API_URL, postBodyImage);
+                    String path = APIUtils.API_URL + "/static/avatar_image/" + loginUser.getUserId() + ".png";
+                    Glide.with(getContext()).load(path).into(binding.profileImage);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -111,7 +120,9 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         binding.emailBox.setText(loginUser.getEmail());
-
+        String path = APIUtils.API_URL + "/static/avatar_image/" + loginUser.getUserId() + ".png";
+        Glide.with(getContext()).load(path).into(binding.profileImage);
+//        binding.profileImage.setImageBitmap(getBitmapFromURL(path));
         binding.updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,7 +157,7 @@ public class ProfileFragment extends Fragment {
         binding.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = CropImage.activity(imageUri)
+                Intent intent = CropImage.activity()
                         .getIntent(getContext());
                 startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
             }
