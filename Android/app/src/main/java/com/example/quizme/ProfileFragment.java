@@ -1,5 +1,6 @@
 package com.example.quizme;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,6 +23,8 @@ import com.example.quizme.Service.UserService;
 import com.example.quizme.databinding.FragmentProfileBinding;
 import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,6 +51,7 @@ public class ProfileFragment extends Fragment {
         this.loginUser = user;
     }
     public static final int PICK_IMAGE = 1;
+    private Uri imageUri;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,28 +82,28 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE && data != null) {
-            MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-            Uri pickedImage = data.getData();
-
-            // Let's read picked image path using content resolver
-            String[] filePath = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContext().getContentResolver().query(pickedImage, filePath, null, null, null);
-            cursor.moveToFirst();
-
-            String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-//            converting Java bitmap to byte array
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray();
-            multipartBodyBuilder.addFormDataPart("image" + 1, loginUser.getEmail().toString() +  ".jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
-            RequestBody postBodyImage = multipartBodyBuilder.build();
-            postRequest(APIUtils.API_URL, postBodyImage);
-            
-            cursor.close();
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
+                MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                Uri resultUri = result.getUri();
+                System.out.println("resultUri: " + resultUri.toString());
+                Bitmap bitmap;
+                try {
+                    bitmap =  MediaStore.Images.Media.getBitmap(this.getContext().getContentResolver(),  resultUri);
+                    //Converting Java bitmap to byte array
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    multipartBodyBuilder.addFormDataPart("image" + 1, loginUser.getReferCode() +  ".jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
+                    RequestBody postBodyImage = multipartBodyBuilder.build();
+                    postRequest(APIUtils.API_URL, postBodyImage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
     }
 
@@ -142,12 +146,11 @@ public class ProfileFragment extends Fragment {
         binding.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, PICK_IMAGE);
+                Intent intent = CropImage.activity(imageUri)
+                        .getIntent(getContext());
+                startActivityForResult(intent, CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE);
             }
         });
-
 
 //        return inflater.inflate(R.layout.fragment_profile, container, false);
         return binding.getRoot();
