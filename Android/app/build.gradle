@@ -53,3 +53,6 @@ dependencies {
 dependencies {
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 }
+dependencies {
+    implementation 'com.squareup.picasso:picasso:2.8'
+}
