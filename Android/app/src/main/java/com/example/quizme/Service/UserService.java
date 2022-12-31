@@ -16,6 +16,9 @@ public interface UserService {
     @GET("/user")
     Call<List<User>> getUsers();
 
+    @GET("/user/{id}")
+    Call<User> getUserByID(@Path("id") int id);
+
     @POST("/user")
     Call<Void> addUser(@Body User user);
 

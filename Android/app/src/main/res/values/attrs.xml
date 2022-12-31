@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
 
     <declare-styleable name="ArcDrawer">
         <attr name="arc_width" format="dimension"/>
@@ -22,5 +21,4 @@
         <attr name="lkwSecondaryTextSize" format="dimension" />
     </declare-styleable>
 
-    
 </resources>

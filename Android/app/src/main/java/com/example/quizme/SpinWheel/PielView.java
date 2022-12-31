@@ -155,7 +155,9 @@ public class PielView extends View {
     }
 
     private void drawPieBackgroundWithBitmap(Canvas canvas, Bitmap bitmap) {
-        canvas.drawBitmap(bitmap, null, new Rect(mPadding / 2, mPadding / 2,
+        canvas.drawBitmap(bitmap, null, new Rect(
+                mPadding / 2,
+                mPadding / 2,
                 getMeasuredWidth() - mPadding / 2,
                 getMeasuredHeight() - mPadding / 2), null);
     }
@@ -181,9 +183,9 @@ public class PielView extends View {
 
         for (int i = 0; i < mLuckyItemList.size(); i++) {
 
-            if (mLuckyItemList.get(i).color != 0) {
+            if (mLuckyItemList.get(i).getColor() != 0) {
                 mArcPaint.setStyle(Paint.Style.FILL);
-                mArcPaint.setColor(mLuckyItemList.get(i).color);
+                mArcPaint.setColor(mLuckyItemList.get(i).getColor());
                 canvas.drawArc(mRange, tmpAngle, sweepAngle, true, mArcPaint);
             }
 
@@ -194,18 +196,19 @@ public class PielView extends View {
                 canvas.drawArc(mRange, tmpAngle, sweepAngle, true, mArcPaint);
             }
 
-            int sliceColor = mLuckyItemList.get(i).textColor != 0 ? mLuckyItemList.get(i).textColor : defaultBackgroundColor;
+            int sliceColor = mLuckyItemList.get(i).getTextColor() != 0 ? mLuckyItemList.get(i).getTextColor() : defaultBackgroundColor;
 
-            if (!TextUtils.isEmpty(mLuckyItemList.get(i).topText))
-                drawTopText(canvas, tmpAngle, sweepAngle, mLuckyItemList.get(i).topText, sliceColor);
-            if (!TextUtils.isEmpty(mLuckyItemList.get(i).secondaryText))
-                drawSecondText(canvas, tmpAngle,sweepAngle,mLuckyItemList.get(i).secondaryText,sliceColor);
+            if (!TextUtils.isEmpty(mLuckyItemList.get(i).getTopText()))
+                drawTopText(canvas, tmpAngle, sweepAngle, mLuckyItemList.get(i).getTopText(), sliceColor);
+            if (!TextUtils.isEmpty(mLuckyItemList.get(i).getSecondaryText()))
+                drawSecondText(canvas, tmpAngle,sweepAngle,mLuckyItemList.get(i).getSecondaryText(),sliceColor);
                 //drawSecondaryText(canvas, tmpAngle, mLuckyItemList.get(i).secondaryText, sliceColor);
 
-            if (mLuckyItemList.get(i).icon != 0)
-                drawImage(canvas, tmpAngle, BitmapFactory.decodeResource(getResources(),
-                        mLuckyItemList.get(i).icon));
-
+            if (mLuckyItemList.get(i).getIcon() != 0)
+                drawImage(canvas,
+                        tmpAngle,
+                        BitmapFactory.decodeResource(getResources(), mLuckyItemList.get(i).getIcon())
+                );
 
 //            BitmapFactory.decodeResource(getResources(),
 //                        mLuckyItemList.get(i).icon));

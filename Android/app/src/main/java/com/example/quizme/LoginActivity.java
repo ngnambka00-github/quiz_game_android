@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -38,11 +42,41 @@ public class LoginActivity extends AppCompatActivity {
         dialog = new ProgressDialog(this);
         dialog.setMessage("Logging in...");
 
-        // Nếu user đã đăng nhập sẵn rồi thì tự động vào MainActivity
-//        if(auth.getCurrentUser() != null) {
-//            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//            finish();
-//        }
+        // Get Login information
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+        final int userid= prefs.getInt("userid", 0);
+        if (userid != 0) {
+            dialog.show();
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Call<User> call = userService.getUserByID(userid);
+                    call.enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if (response.isSuccessful()) {
+                                User user = response.body();
+                                if (user != null) {
+                                    myApplication.setUserLogin(user);
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    dialog.dismiss();
+                                    finish();
+                                } else dialog.dismiss();
+                            } else dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            dialog.dismiss();
+                            Log.e("ERROR CALL: ", t.getMessage());
+                        }
+                    });
+                }
+            }, 1000);
+        }
 
         binding.submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +124,10 @@ public class LoginActivity extends AppCompatActivity {
                         if (user.getPass().equals(password) && user.getEmail().equals(email)) {
                             // Update global variable
                             myApplication.setUserLogin(user);
+
+                            // Save login information
+                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                            prefs.edit().putInt("userid",user.getUserId()).commit();
 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();

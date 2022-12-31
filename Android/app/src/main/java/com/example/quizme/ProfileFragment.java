@@ -2,6 +2,7 @@ package com.example.quizme;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,6 +121,28 @@ public class ProfileFragment extends Fragment {
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, PICK_IMAGE);
+            }
+        });
+
+        binding.updateLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ProgressDialog dialog = new ProgressDialog(getContext());
+                dialog.setMessage("Logging out...");
+                dialog.show();
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 100ms
+                        startActivity(new Intent(getContext(), LoginActivity.class));
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        prefs.edit().putInt("userid",0).commit();
+
+                        dialog.dismiss();
+                        getActivity().finish();
+                    }
+                }, 1000);
             }
         });
 

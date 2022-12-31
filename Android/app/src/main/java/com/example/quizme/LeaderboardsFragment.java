@@ -17,6 +17,8 @@ import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,7 +45,6 @@ public class LeaderboardsFragment extends Fragment {
         binding = FragmentLeaderboardsBinding.inflate(inflater, container, false);
         userService = APIUtils.getUserService();
 
-//        FirebaseFirestore database = FirebaseFirestore.getInstance();
 
         final ArrayList<User> users = new ArrayList<>();
         final LeaderboardsAdapter adapter = new LeaderboardsAdapter(getContext(), users);
@@ -58,6 +59,19 @@ public class LeaderboardsFragment extends Fragment {
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()){
                     List<User> listUsers = response.body();
+                    // sort by user's coint by descending
+                    Collections.sort(listUsers, new Comparator<User>() {
+                        @Override
+                        public int compare(User user, User t1) {
+                            if (user.getCoins() > t1.getCoins()) {
+                                return -1;
+                            }
+                            if (user.getCoins() == t1.getCoins()) {
+                                return 0;
+                            }
+                            return 1;
+                        }
+                    });
                     for (User user : listUsers) {
                         users.add(user);
                     }
@@ -70,18 +84,6 @@ public class LeaderboardsFragment extends Fragment {
                 Log.e("ERROR CALL: ", t.getMessage());
             }
         });
-
-//        database.collection("users")
-//                .orderBy("coins", Query.Direction.DESCENDING).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//            @Override
-//            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                for(DocumentSnapshot snapshot : queryDocumentSnapshots) {
-//                    User user = snapshot.toObject(User.class);
-//                    users.add(user);
-//                }
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
 
         return binding.getRoot();
     }
