@@ -2,11 +2,12 @@ from unicodedata import category
 
 import pymysql
 from app import app
-from config import mysql
+from config import mysql, mail
 from flask import jsonify
 from flask import flash, request
 import constants
 from flask_cors import cross_origin
+from flask_mail import Message
 
 
 # --------------------- USER ------------------------
@@ -275,6 +276,18 @@ def get_questions_by_category_limit(category_id, limit):
         cursor.close()
         conn.close()
 
+
+@app.route("/sendMail", methods=["POST"], )
+def send_mail():
+    data = request.get_json()
+    recipients = data.get('name', '')
+    
+    msg = Message(subject = 'Hello', sender = 'testId@gmail.com', recipients = [recipients])
+    msg.body = "Hello Flask message sent from Flask-Mail"
+    mail.send(msg)
+    respone = jsonify('Sent Email Successfully!')
+    respone.status_code = 200
+    return respone
 
 # ----------------------------------------------------
 
