@@ -17,6 +17,8 @@ conda activate server
 pip install flask==2.2.2
 pip install flask-mysql==1.5.2
 pip install flask-cors==3.0.10
+pip install Flask-Mail==0.9.1
+pip install python-dotenv==0.21.0
 ```
 
 ## 2. Run

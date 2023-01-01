@@ -1,8 +1,8 @@
 from flask import Flask
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+from router.home import home_api
 
 app = Flask(__name__)
 CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
-app.config["UPLOADED_PHOTOS_DEST"] = "static/avatar"
-app.config["SECRET_KEY"] = "SECRET_KEY_ABCD"
+
+app.register_blueprint(home_api, url_prefix="/")

@@ -5,11 +5,21 @@ from flask import jsonify
 from flask import flash, request, flash, url_for, redirect
 import constants
 from flask_cors import cross_origin
-from flask_cors import cross_origin
 from flask_uploads import IMAGES, UploadSet, configure_uploads
+from flask_mail import Mail, Message
 
 photos = UploadSet("photos", IMAGES)
 configure_uploads(app, photos)
+
+mail = Mail(app)
+
+
+@app.route("/email", methods=["POST"])
+def index():
+    msg = Message('Hello', sender='thamtunamle99@gmail.com', recipients=['ngnambka00@gmail.cm'])
+    msg.body = "Hello Flask message sent from Flask-Mail"
+    mail.send(msg)
+    return "Sent"
 
 
 # --------------------- USER ------------------------
@@ -301,10 +311,11 @@ def showMessage(error=None):
     return respone
 
 
-@app.route("/")
-def show_home_page():
-    # response from the server
-    return "This is home page"
+#
+# @app.route("/")
+# def show_home_page():
+#     # response from the server
+#     return "This is home page"
 
 
 def allowed_file(filename):
