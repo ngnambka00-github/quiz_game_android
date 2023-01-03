@@ -49,19 +49,23 @@ import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
 
-    public static final int PICK_IMAGE = 1;
-
     private User loginUser = null;
     UserService userService = null;
     FragmentProfileBinding binding;
     private ProgressDialog dialog;
     String imageAvatarPath = null;
+    private MainActivity parentActivity;
 
     public ProfileFragment() {
     }
 
     public ProfileFragment(User user) {
         this.loginUser = user;
+    }
+
+    public ProfileFragment(User user, MainActivity app) {
+        this.loginUser = user;
+        this.parentActivity = app;
     }
 
     @Override
@@ -106,7 +110,11 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.isSuccessful()) {
+                                binding.txtFullname.setText("[" + String.valueOf(loginUser.getUserId()) + "] " + loginUser.getName());
                                 Toast.makeText(getActivity(), "Cập nhập thông tin cá nhân thành công", Toast.LENGTH_SHORT).show();
+
+                                // Update main logined user
+                                parentActivity.updateUserLogin(loginUser);
                             } else {
                                 Toast.makeText(getActivity(), "Cập nhập thông tin cá nhân thất bại", Toast.LENGTH_SHORT).show();
                             }
@@ -124,10 +132,6 @@ public class ProfileFragment extends Fragment {
         binding.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-//                photoPickerIntent.setType("image/*");
-//                startActivityForResult(photoPickerIntent, PICK_IMAGE);
-
                 CropImage.activity()
                         .start(getContext(), ProfileFragment.this);
             }

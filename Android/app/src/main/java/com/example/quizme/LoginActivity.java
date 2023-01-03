@@ -100,7 +100,11 @@ public class LoginActivity extends AppCompatActivity {
 
                 // Nếu login thành công sẽ chuyển sang MainActivity
                 // Nếu login không thành công sẽ show Toast
-                checkLogin(email, pass);
+                try {
+                    checkLogin(email, pass);
+                } catch (Exception ex) {
+                    Toast.makeText(LoginActivity.this, "Server bị lỗi rồi. Check server đi !!", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
