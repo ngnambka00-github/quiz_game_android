@@ -1,25 +1,28 @@
 import pymysql
 from app import app
-from config import mysql
+from config import mysql, mail
 from flask import jsonify
-from flask import flash, request, flash, url_for, redirect
+from flask import request, flash, url_for, redirect
 import constants
 from flask_cors import cross_origin
 from flask_uploads import IMAGES, UploadSet, configure_uploads
-from flask_mail import Mail, Message
+from flask_mail import Message
 
 photos = UploadSet("photos", IMAGES)
 configure_uploads(app, photos)
 
-mail = Mail(app)
 
+@app.route("/send_mail", methods=["POST"], )
+def send_mail():
+    data = request.get_json()
+    recipients = data.get('name', '')
 
-@app.route("/email", methods=["POST"])
-def index():
-    msg = Message('Hello', sender='thamtunamle99@gmail.com', recipients=['ngnambka00@gmail.cm'])
+    msg = Message(subject='Hello', sender='testId@gmail.com', recipients=[recipients])
     msg.body = "Hello Flask message sent from Flask-Mail"
     mail.send(msg)
-    return "Sent"
+    respone = jsonify('Sent Email Successfully!')
+    respone.status_code = 200
+    return respone
 
 
 # --------------------- USER ------------------------
