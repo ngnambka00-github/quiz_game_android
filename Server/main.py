@@ -12,7 +12,7 @@ photos = UploadSet("photos", IMAGES)
 configure_uploads(app, photos)
 
 
-@app.route("/send_mail", methods=["POST"], )
+@app.route("/send_mail", methods=["POST"])
 def send_mail():
     data = request.get_json()
     recipients = data.get('name', '')

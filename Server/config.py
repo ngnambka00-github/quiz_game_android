@@ -13,12 +13,12 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 # config for email
 mail = Mail()
-app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
-app.config["MAIL_PORT"] = os.getenv("MAIL_PORT")
-app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
-app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS")
-app.config["MAIL_USE_SSL"] = os.getenv("MAIL_USE_SSL")
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'quizzgame123@gmail.com'
+app.config['MAIL_PASSWORD'] = 'xeqrygrkyiioldbp'
 mail.init_app(app)
 
 # config MYSQL
@@ -28,3 +28,5 @@ app.config["MYSQL_DATABASE_USER"] = os.getenv("MYSQL_DATABASE_USER")
 app.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("MYSQL_DATABASE_PASSWORD")
 app.config["MYSQL_DATABASE_DB"] = os.getenv("MYSQL_DATABASE_DB")
 mysql.init_app(app)
+
+# print(f"{type(bool(os.getenv('MAIL_USE_TLS')))}")
