@@ -54,7 +54,9 @@ public class ProfileFragment extends Fragment {
     private ProgressDialog dialog;
     String imageAvatarPath = null;
 
-    public ProfileFragment() { }
+    public ProfileFragment() {
+    }
+
     public ProfileFragment(User user) {
         this.loginUser = user;
     }
@@ -72,6 +74,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         binding.emailBox.setText(loginUser.getEmail());
+        binding.txtFullname.setText("[" + String.valueOf(loginUser.getUserId()) + "] " + loginUser.getName());
+
         String avatarUser = loginUser.getImagePath();
         if (avatarUser != null && !avatarUser.isEmpty()) {
             System.out.println(avatarUser);
@@ -100,8 +104,7 @@ public class ProfileFragment extends Fragment {
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             if (response.isSuccessful()) {
                                 Toast.makeText(getActivity(), "Cập nhập thông tin cá nhân thành công", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(getActivity(), "Cập nhập thông tin cá nhân thất bại", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -121,6 +124,9 @@ public class ProfileFragment extends Fragment {
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, PICK_IMAGE);
+
+//                CropImage.activity()
+//                        .start(getContext(), ProfileFragment.this);
             }
         });
 
@@ -137,7 +143,7 @@ public class ProfileFragment extends Fragment {
                         //Do something after 100ms
                         startActivity(new Intent(getContext(), LoginActivity.class));
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                        prefs.edit().putInt("userid",0).commit();
+                        prefs.edit().putInt("userid", 0).commit();
 
                         dialog.dismiss();
                         getActivity().finish();
@@ -165,7 +171,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String serverImagePath = response.body().string();
-                imageAvatarPath = "avatar/"+serverImagePath;
+                imageAvatarPath = "avatar/" + serverImagePath;
                 dialog.dismiss();
             }
         });
@@ -188,7 +194,7 @@ public class ProfileFragment extends Fragment {
 
                 String[] users = loginUser.getEmail().split("@");
                 MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-                multipartBodyBuilder.addFormDataPart("image",  users[0]+".png", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
+                multipartBodyBuilder.addFormDataPart("image", users[0] + ".png", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
                 RequestBody postBodyImage = multipartBodyBuilder.build();
                 postRequest(APIUtils.API_URL + "/upload_image", postBodyImage);
             } catch (FileNotFoundException e) {
@@ -196,8 +202,7 @@ public class ProfileFragment extends Fragment {
                 dialog.dismiss();
                 Toast.makeText(null, "Something went wrong", Toast.LENGTH_LONG).show();
             }
-        }
-        else {
+        } else {
             dialog.dismiss();
         }
     }
