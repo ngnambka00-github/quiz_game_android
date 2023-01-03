@@ -1,5 +1,6 @@
 package com.example.quizme;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,8 @@ import com.example.quizme.Service.UserService;
 import com.example.quizme.databinding.FragmentProfileBinding;
 import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
+
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -121,12 +124,12 @@ public class ProfileFragment extends Fragment {
         binding.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, PICK_IMAGE);
+//                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+//                photoPickerIntent.setType("image/*");
+//                startActivityForResult(photoPickerIntent, PICK_IMAGE);
 
-//                CropImage.activity()
-//                        .start(getContext(), ProfileFragment.this);
+                CropImage.activity()
+                        .start(getContext(), ProfileFragment.this);
             }
         });
 
@@ -181,26 +184,34 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         dialog.show();
-        if (requestCode == PICK_IMAGE && data != null) {
-            try {
-                Uri imageUri = data.getData();
-                InputStream imageStream = this.getActivity().getContentResolver().openInputStream(imageUri);
-                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                binding.profileImage.setImageBitmap(selectedImage);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && data != null) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == Activity.RESULT_OK) {
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
+                try {
+                    Uri imageUri = result.getUri();
+                    InputStream imageStream = this.getActivity().getContentResolver().openInputStream(imageUri);
+                    Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    binding.profileImage.setImageBitmap(selectedImage);
 
-                String[] users = loginUser.getEmail().split("@");
-                MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-                multipartBodyBuilder.addFormDataPart("image", users[0] + ".png", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
-                RequestBody postBodyImage = multipartBodyBuilder.build();
-                postRequest(APIUtils.API_URL + "/upload_image", postBodyImage);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                dialog.dismiss();
-                Toast.makeText(null, "Something went wrong", Toast.LENGTH_LONG).show();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+
+                    String[] users = loginUser.getEmail().split("@");
+                    MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                    multipartBodyBuilder.addFormDataPart("image", users[0] + ".png", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
+                    RequestBody postBodyImage = multipartBodyBuilder.build();
+                    postRequest(APIUtils.API_URL + "/upload_image", postBodyImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    dialog.dismiss();
+                    Toast.makeText(null, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         } else {
             dialog.dismiss();
