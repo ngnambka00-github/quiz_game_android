@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,11 +15,6 @@ import android.widget.Toast;
 
 import com.example.quizme.databinding.ActivityMainBinding;
 import com.example.quizme.models.User;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -26,8 +22,13 @@ import me.ibrahimsn.lib.OnItemSelectedListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    MyApplication myApplication = (MyApplication) this.getApplication();;
+    MyApplication myApplication = (MyApplication) this.getApplication();
     ActivityMainBinding binding;
+
+    public void updateUserLogin(User user) {
+        myApplication.setUserLogin(user);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 switch (i) {
                     case 0:
-                        transaction.replace(R.id.content, new HomeFragment());
+                        transaction.replace(R.id.content, new HomeFragment(loginUser));
                         transaction.commit();
                         break;
                     case 1:
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                         transaction.commit();
                         break;
                     case 2:
-                        transaction.replace(R.id.content, new WalletFragment(loginUser));
+                        transaction.replace(R.id.content, new WalletFragment(loginUser, MainActivity.this));
                         transaction.commit();
                         break;
                     case 3:
@@ -78,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.wallet) {
+        if (item.getItemId() == R.id.wallet) {
             Toast.makeText(this, "wallet is clicked.", Toast.LENGTH_SHORT).show();
 
             // Change fragment
             User loginUser = myApplication.getUserLogin();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.content, new WalletFragment(loginUser));
+            transaction.replace(R.id.content, new WalletFragment(loginUser, this));
             transaction.commit();
 
             // change index of bottomBar

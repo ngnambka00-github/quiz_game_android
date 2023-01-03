@@ -41,7 +41,7 @@ public class ResultActivity extends AppCompatActivity {
         int totalQuestions = getIntent().getIntExtra("total", 0);
 
         // Mỗi câu trả lời đúng sẽ nhận được POINT coin
-        final long points = correctAnswers * POINTS;
+        final int points = correctAnswers * POINTS;
 
         binding.score.setText(String.format("%d/%d", correctAnswers, totalQuestions));
         binding.earnedCoins.setText(String.valueOf(points));

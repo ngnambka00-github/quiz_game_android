@@ -16,6 +16,7 @@ import com.example.quizme.Service.CategoryService;
 import com.example.quizme.adapter.CategoryAdapter;
 import com.example.quizme.databinding.FragmentHomeBinding;
 import com.example.quizme.models.CategoryModel;
+import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
 
 import java.util.ArrayList;
@@ -29,8 +30,13 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     private CategoryService categoryService;
+    private User loginedUser = null;
 
     public HomeFragment() {
+    }
+
+    public HomeFragment(User loginedUser) {
+        this.loginedUser = loginedUser;
     }
 
     @Override
@@ -83,7 +89,8 @@ public class HomeFragment extends Fragment {
         binding.inviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Invite Friend! Chưa dev chức năng này", Toast.LENGTH_SHORT).show();
+                BottomSheetDialog bottomSheet = new BottomSheetDialog(loginedUser);
+                bottomSheet.show(getActivity().getSupportFragmentManager(), "ModalBottomSheet");
             }
         });
 

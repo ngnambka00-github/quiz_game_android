@@ -24,7 +24,7 @@ public class User {
 
     @SerializedName("coin")
     @Expose
-    private long coins = 25;
+    private int coins = 25;
 
     @SerializedName("image_path")
     @Expose
@@ -72,11 +72,11 @@ public class User {
         this.referCode = referCode;
     }
 
-    public long getCoins() {
+    public int getCoins() {
         return coins;
     }
 
-    public void setCoins(long coins) {
+    public void setCoins(int coins) {
         this.coins = coins;
     }
 

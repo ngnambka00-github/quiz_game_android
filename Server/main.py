@@ -12,13 +12,15 @@ photos = UploadSet("photos", IMAGES)
 configure_uploads(app, photos)
 
 
-@app.route("/send_mail", methods=["POST"])
+@app.route("/send_mail", methods=["POST"], )
 def send_mail():
     data = request.get_json()
-    recipients = data.get('name', '')
+    recipients = data.get('to_mail', '')
+    subject = data.get('subject', '')
+    body_message = data.get('body', '')
 
-    msg = Message(subject='Hello', sender='testId@gmail.com', recipients=[recipients])
-    msg.body = "Hello Flask message sent from Flask-Mail"
+    msg = Message(subject=subject, sender='testId@gmail.com', recipients=[recipients])
+    msg.body = body_message
     mail.send(msg)
     respone = jsonify('Sent Email Successfully!')
     respone.status_code = 200
@@ -57,7 +59,6 @@ def create_user():
 
 
 @app.route('/user', methods=["GET"])
-@cross_origin()
 def get_users():
     """
         Lấy tất cả danh sách users
@@ -79,7 +80,7 @@ def get_users():
         conn.close()
 
 
-@app.route('/user/<int:user_id>')
+@app.route('/user/<int:user_id>', methods=["GET"])
 def get_user_by_id(user_id):
     """
         Lấy ra 1 user theo user_id
@@ -107,16 +108,19 @@ def update_user():
     try:
         obj_json = request.json
         user_id = obj_json['user_id']
+        fullname = obj_json['fullname']
         email = obj_json['email']
         password = obj_json['password']
         coin = obj_json['coin']
-        fullname = obj_json['fullname']
         image_path = obj_json["image_path"]
+
+        print(f"{request.json}")
 
         if fullname and email and password and coin and user_id and request.method == 'PUT':
             bind_data = (email, password, coin, fullname, image_path, user_id)
             conn = mysql.connect()
             cursor = conn.cursor()
+            print(f"[CHECK CURSOR]: {cursor}")
             cursor.execute(constants.QUERY_UPDATE_USER, bind_data)
             conn.commit()
 

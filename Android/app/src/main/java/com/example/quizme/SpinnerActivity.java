@@ -110,7 +110,7 @@ public class SpinnerActivity extends AppCompatActivity {
     }
 
     void updateCash(int index) {
-        long cash = 0;
+        int cash = 0;
         switch (index) {
             case 0:
                 cash = 5;
@@ -138,7 +138,7 @@ public class SpinnerActivity extends AppCompatActivity {
                 break;
         }
 
-        final long finalCash = cash;
+        final int finalCash = cash;
         loginUser.setCoins(loginUser.getCoins() + cash);
         Call<Void> call = userService.updateUser(loginUser);
         call.enqueue(new Callback<Void>() {
