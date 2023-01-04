@@ -10,27 +10,26 @@
     * [Miniconda Installation](https://docs.conda.io/en/main/miniconda.html)
 * Create new env and install libraries to run Backend Sever
 ```commandline
+git clone https://github.com/ngnambka00-github/quiz_game_android.git
+cd quiz_game_android/Server/
+
 conda create -n server python=3.7.9
 conda activate server
+pip install -r requirement.txt
 ```
-```commandline
-pip install flask==2.2.2
-pip install flask-mysql==1.5.2
-pip install flask-cors==3.0.10
-pip install Flask-Mail==0.9.1
-pip install python-dotenv==0.21.0
-```
+
 
 ## 2. Run
 ### 2.1 Import [Database](/Database) to MySQL Workbench
 * Instruction for import DB ([Link](https://help.umbler.com/hc/en-us/articles/202385865-MySQL-Importing-Exporting-a-database#:~:text=To%20import%20a%20file%2C%20open,File%20and%20select%20the%20file.))
-* Fill config into [config file](/Server/config.py) (Backend Server)
+* Create file `.env` by `cp template.env .env`, then filling password database to file `.env`:
 ```commandline
 app.config["MYSQL_DATABASE_USER"] = "..."
 app.config["MYSQL_DATABASE_PASSWORD"] = "..."
 app.config["MYSQL_DATABASE_DB"] = "quiz_game"
 app.config["MYSQL_DATABASE_HOST"] = "localhost"
 ```
+
 ### 2.2 Run Backend Server
 * Open folder [Server](/Server) by Pycharm or VS Code
 * Open Terminal and run commands
