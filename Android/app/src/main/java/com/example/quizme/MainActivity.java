@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.quizme.databinding.ActivityMainBinding;
+import com.example.quizme.models.PlaySound;
 import com.example.quizme.models.User;
 
 import java.util.ArrayList;
@@ -29,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
         myApplication.setUserLogin(user);
     }
 
-
+    private PlaySound playSound;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
-
+        playSound = new PlaySound(this);
         final User loginUser = myApplication.getUserLogin();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         binding.bottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int i) {
+                playSound.playSoundTrans();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 switch (i) {
                     case 0:

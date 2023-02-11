@@ -204,7 +204,7 @@ public class ProfileFragment extends Fragment {
 
                     String[] users = loginUser.getEmail().split("@");
                     MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-                    multipartBodyBuilder.addFormDataPart("image", users[0] + ".png", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
+                    multipartBodyBuilder.addFormDataPart("image", users[0] + ".jpg", RequestBody.create(MediaType.parse("image/*jpg"), byteArray));
                     RequestBody postBodyImage = multipartBodyBuilder.build();
                     postRequest(APIUtils.API_URL + "/upload_image", postBodyImage);
                 } catch (FileNotFoundException e) {

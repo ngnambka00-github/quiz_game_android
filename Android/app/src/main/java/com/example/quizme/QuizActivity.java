@@ -2,6 +2,7 @@ package com.example.quizme;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.method.ScrollingMovementMethod;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.quizme.Service.QuestionService;
 import com.example.quizme.databinding.ActivityQuizBinding;
+import com.example.quizme.models.PlaySound;
 import com.example.quizme.models.Question;
 import com.example.quizme.utils.APIUtils;
 import java.util.ArrayList;
@@ -33,17 +35,18 @@ public class QuizActivity extends AppCompatActivity {
     private boolean isClick5050Help = false;
     private int index = 0;
     private int correctAnswers = 0;
+    private PlaySound playSound;
+    MediaPlayer coundown_sound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        playSound = new PlaySound(this);
         binding = ActivityQuizBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         questionService = APIUtils.getQuestionService();
-
         questions = new ArrayList<>();
         final int categoryID = Integer.parseInt(getIntent().getStringExtra("category_id"));
-
         Call<List<Question>> call = questionService.getQuestionsByCategoryAndLimited(categoryID, 5);
         call.enqueue(new Callback<List<Question>>() {
             @Override
@@ -56,7 +59,6 @@ public class QuizActivity extends AppCompatActivity {
                     setNextQuestion();
                 }
             }
-
             @Override
             public void onFailure(Call<List<Question>> call, Throwable t) {
                 Log.e("ERROR CALL: ", t.getMessage());
@@ -71,6 +73,7 @@ public class QuizActivity extends AppCompatActivity {
         binding.callRelativeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                playSound.playSoundSupport();
                 String explanation = question.getExplanation();
                 if (explanation == null || explanation.isEmpty()) {
                     Toast.makeText(QuizActivity.this, "Xin lỗi câu này không có gợi ý !!", Toast.LENGTH_SHORT).show();
@@ -84,6 +87,7 @@ public class QuizActivity extends AppCompatActivity {
         binding.help5050Btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                playSound.playSound5050();
                 isClick5050Help = true;
                 handler5050Help();
             }
@@ -93,10 +97,18 @@ public class QuizActivity extends AppCompatActivity {
         binding.quizBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                coundown_sound.stop();
                 startActivity(new Intent(QuizActivity.this, MainActivity.class));
                 finish();
             }
         });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        coundown_sound.stop();
     }
 
     void resetTimer() {
@@ -116,6 +128,7 @@ public class QuizActivity extends AppCompatActivity {
                 binding.option3.setClickable(false);
                 binding.option4.setClickable(false);
                 binding.help5050Btn.setClickable(false);
+                coundown_sound.stop();
             }
         };
     }
@@ -136,6 +149,9 @@ public class QuizActivity extends AppCompatActivity {
             timer.cancel();
 
         timer.start();
+        coundown_sound = MediaPlayer.create(this, R.raw.ticktock);
+        coundown_sound.start();
+//        playSound.playSoundTimer();
         if(index < questions.size()) {
             binding.questionCounter.setText(String.format("%d/%d", (index+1), questions.size()));
             question = questions.get(index);
@@ -169,11 +185,14 @@ public class QuizActivity extends AppCompatActivity {
 
     void checkAnswer(TextView textView) {
         String selectedAnswer = textView.getText().toString();
+        coundown_sound.stop();
         if(selectedAnswer.equals(question.getAnswer())) {
             correctAnswers++;
+            playSound.playSoundCorrect();
             textView.setBackground(getResources().getDrawable(R.drawable.option_right));
         } else {
             showAnswer();
+            playSound.playSoundFail();
             textView.setBackground(getResources().getDrawable(R.drawable.option_wrong));
         }
     }
@@ -226,6 +245,8 @@ public class QuizActivity extends AppCompatActivity {
                 }
 
                 if (index == questions.size()) {
+                    coundown_sound.stop();
+                    playSound.playSoundResult();
                     Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
                     intent.putExtra("correct", correctAnswers);
                     intent.putExtra("total", questions.size());
