@@ -54,8 +54,22 @@ public class PlaySound {
         soundIds[4] = soundPool.load(this.appCompatActivity, R.raw.tada, 1);
         soundIds[5] = soundPool.load(this.appCompatActivity, R.raw.ting, 1);
         soundIds[6] = soundPool.load(this.appCompatActivity, R.raw.support, 1);
-
-
+        soundIds[7] = soundPool.load(this.appCompatActivity, R.raw.finalspinner, 1);
+        soundIds[8] = soundPool.load(this.appCompatActivity, R.raw.fail, 1);
+    }
+    public void playSoundFailSpinner( )  {
+        if(loaded)  {
+            float leftVolumn = volume;
+            float rightVolumn = volume;
+            int streamId = this.soundPool.play(soundIds[8],leftVolumn, rightVolumn, 1, 0, 1f);
+        }
+    }
+    public void playSoundFinalSpinner( )  {
+        if(loaded)  {
+            float leftVolumn = volume;
+            float rightVolumn = volume;
+            int streamId = this.soundPool.play(soundIds[7],leftVolumn, rightVolumn, 1, 0, 1f);
+        }
     }
     public void playSoundSupport( )  {
         if(loaded)  {

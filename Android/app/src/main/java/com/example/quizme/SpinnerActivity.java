@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.example.quizme.Service.UserService;
 import com.example.quizme.SpinWheel.LuckyWheelView;
 import com.example.quizme.SpinWheel.model.LuckyItem;
 import com.example.quizme.databinding.ActivitySpinnerBinding;
+import com.example.quizme.models.PlaySound;
 import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
 
@@ -29,13 +31,15 @@ public class SpinnerActivity extends AppCompatActivity {
     private MyApplication myApplication = (MyApplication) this.getApplication();
     private User loginUser = null;
     private UserService userService;
+    private MediaPlayer spinner_sound;
+    private PlaySound playSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySpinnerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        playSound = new PlaySound(this);
         loginUser = myApplication.getUserLogin();
         userService = APIUtils.getUserService();
 
@@ -94,6 +98,8 @@ public class SpinnerActivity extends AppCompatActivity {
         binding.spinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                spinner_sound = MediaPlayer.create(getBaseContext(), R.raw.spinner);
+                spinner_sound.start();
                 Random r = new Random();
                 int randomNumber = r.nextInt(8);
 
@@ -104,6 +110,7 @@ public class SpinnerActivity extends AppCompatActivity {
         binding.wheelview.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
             @Override
             public void LuckyRoundItemSelected(int index) {
+                spinner_sound.stop();
                 updateCash(index);
             }
         });
@@ -148,10 +155,12 @@ public class SpinnerActivity extends AppCompatActivity {
                     Toast.makeText(SpinnerActivity.this,
                              "Đen rồi. Chúc may mắn lần sau !",
                             Toast.LENGTH_SHORT).show();
+                    playSound.playSoundFailSpinner();
                 } else {
                     Toast.makeText(SpinnerActivity.this,
                             "Xin chúc mừng bạn đã nhận được " + String.valueOf(finalCash) + " coins",
                             Toast.LENGTH_SHORT).show();
+                    playSound.playSoundFinalSpinner();
                 }
                 myApplication.setUserLogin(loginUser);
                 startActivity(new Intent(SpinnerActivity.this, MainActivity.class));
