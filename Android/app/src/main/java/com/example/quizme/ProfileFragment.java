@@ -30,6 +30,8 @@ import com.example.quizme.utils.APIUtils;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -98,8 +100,9 @@ public class ProfileFragment extends Fragment {
                 String password = binding.passBox.getText().toString();
 
                 if (!name.isEmpty() && !password.isEmpty()) {
+                    String hash_pass = BCrypt.hashpw(loginUser.getEmail() + password, BCrypt.gensalt(12));
                     loginUser.setName(name);
-                    loginUser.setPass(password);
+                    loginUser.setPass(hash_pass);
 
                     if (imageAvatarPath != null) {
                         loginUser.setImagePath(imageAvatarPath);

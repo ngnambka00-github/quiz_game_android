@@ -15,6 +15,8 @@ import com.example.quizme.databinding.ActivitySignupBinding;
 import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -64,7 +66,8 @@ public class SignupActivity extends AppCompatActivity {
                 }
 
                 dialog.show();
-                final User user = new User(name, email, pass, referCode);
+                String hash_pass = BCrypt.hashpw(email + pass, BCrypt.gensalt(12));
+                final User user = new User(name, email, hash_pass, referCode);
 
                 // Check existed email and add new user
                 Call<List<User>> callListUser = userService.getUsers();

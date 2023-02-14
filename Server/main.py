@@ -7,6 +7,7 @@ import constants
 from flask_cors import cross_origin
 from flask_uploads import IMAGES, UploadSet, configure_uploads
 from flask_mail import Message
+import bcrypt
 
 photos = UploadSet("photos", IMAGES)
 configure_uploads(app, photos)
@@ -113,8 +114,6 @@ def update_user():
         password = obj_json['password']
         coin = obj_json['coin']
         image_path = obj_json["image_path"]
-
-        print(f"{request.json}")
 
         if fullname and email and password and coin and user_id and request.method == 'PUT':
             bind_data = (email, password, coin, fullname, image_path, user_id)

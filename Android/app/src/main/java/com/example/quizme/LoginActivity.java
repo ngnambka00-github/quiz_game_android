@@ -19,6 +19,9 @@ import com.example.quizme.databinding.ActivityLoginBinding;
 import com.example.quizme.models.User;
 import com.example.quizme.utils.APIUtils;
 
+import org.mindrot.jbcrypt.BCrypt;
+
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         // Get Login information
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
         prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-        final int userid= prefs.getInt("userid", 0);
+        final int userid = prefs.getInt("userid", 0);
         if (userid != 0) {
             dialog.show();
 
@@ -122,16 +125,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 dialog.dismiss();
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     List<User> listUsers = response.body();
-                    for (User user : listUsers){
-                        if (user.getPass().equals(password) && user.getEmail().equals(email)) {
+                    for (User user : listUsers) {
+                        boolean check1 = user.getEmail().equals(email);
+                        boolean check2 = BCrypt.checkpw(user.getEmail() + password, user.getPass());
+
+                        if (check2 && check1) {
                             // Update global variable
                             myApplication.setUserLogin(user);
 
                             // Save login information
                             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                            prefs.edit().putInt("userid",user.getUserId()).commit();
+                            prefs.edit().putInt("userid", user.getUserId()).commit();
 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
